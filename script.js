@@ -27,39 +27,8 @@ function personalizar() {
 //toppings seleccionados
     let toppings = [];
 
-    document.querySelectorAll('input[name = "topping"]: checked')
-    .forEach(function(topping){
-        toppings.push(topping.value);
-    });
-//salsa seleccionada
-let salsa = document.querySelector(
-    'input[name = "salsa" ]: checked'
-);
-if (toppings.length === 0){
-    alert (" 🍓 Selecciona al menos un topping");
-    return;
-}
-if (!salsa){
-    alert("🍓 Selecciona una salsa");
-    return;
-
-}
-//crear mensaje
-let mensaje =
- " 🍓 *NUEVO PEDIDO - MWH FRESAS* %0A%0A"+
- "toppings: "+
- encodeURIComponent(toppings,join(" , "))+
- "%0A" +
- "Salsa: "+
- encodeURIComponent(salsa.value)+
- "%0A%0A" +
- "¡Hola! Quiero realizar este pedido ☺";
-
- //Abrir WhatsApp
- window.open(
-    "https://wa.me/573238263347?text="+ mensaje,
-    "_blank"
- );
+    //Busca los toppings que estén marcados
+    document.querySelectorAll('')
 
 }
 
@@ -67,6 +36,7 @@ let mensaje =
 
     mensaje += "Salsa: " + salsa.value + "\n";
 
+    
 
     if (toppings.length > 0) {
 
