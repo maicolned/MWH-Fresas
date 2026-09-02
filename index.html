@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fresas con Crema</title>
+
+    <link rel="stylesheet" href="estilos.css">
+</head>
+        </div>
+
+<body>
+
+    <!-- MENÚ -->
+    <header>
+        <div class="logo">
+            🍓 
+             
+        </div>
+
+        <nav>
+            <a href="#inicio">Inicio</a>
+            <a href="#nosotros">Nosotros</a>
+            <a href="#productos">Productos</a>
+            <a href="#personaliza">Personaliza</a>
+            <a href="#contacto">Contacto</a>
+        </nav>
+    </header>
+
+
+    <!-- PORTADA -->
+    <section class="hero" id="inicio">
+
+        <img src="img1.jpeg" alt="Fresas con crema">
+
+        <div class="hero-text">
+            <h1>Fresas con<br>crema</h1>
+
+            <p>
+                "Endulza tus momentos<br>
+                con el mejor sabor"
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- PRODUCTOS -->
+    <section class="productos" id="productos">
+
+        <h2>Nuestros</h2>
+        <h3>Productos</h3>
+
+        <div class="productos-container">
+
+            <div class="producto">
+                <img src="img2.jpeg" alt="Fresas con crema">
+                <h4>Fresas 1 toppings</h4>
+                <p>$13.000</p>
+                <button onclick="seleccionarProducto('Fresas ')">
+                    Comprar
+                </button>
+            </div>
+
+            <div class="producto">
+                <img src="img3.jpeg" alt="Fresas con crema">
+                <h4>Fresas 2 toppings</h4>
+                <p>$17.000</p>
+                <button onclick="seleccionarProducto('Fresas ')">
+                    Comprar
+                </button>
+            </div>
+
+            <div class="producto">
+                <img src="img4.jpeg" alt="Fresas con crema">
+                <h4>Fresas 1 toppings</h4>
+                <p>$13.000</p>
+                <button onclick="seleccionarProducto('Fresas ')">
+                    Comprar
+                </button>
+            </div>
+
+            <div class="producto">
+                <img src="img5.jpeg" alt="Fresas con crema">
+                <h4>Fresas 2 toppings</h4>
+                <p>$17.000</p>
+                <button onclick="seleccionarProducto('Fresas ')">
+                    Comprar
+                </button>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- PERSONALIZAR -->
+    <section class="personaliza" id="personaliza">
+
+        <h2>Personaliza tu antojo</h2>
+
+        <div class="personalizar-container">
+
+            <div>
+                <h3>Escoge tus toppings</h3>
+
+                <label>
+                    <input type="checkbox" value="Barquillos">
+                    Barquillos
+                </label>
+
+                <label>
+                    <input type="checkbox" value="Gomitas">
+                    Gomitas
+                </label>
+
+                <label>
+                    <input type="checkbox" value="Galletas">
+                    Galletas
+                </label>
+
+                <label>
+                    <input type="checkbox" value="masmellos">
+                    Masmellos
+                </label>
+                 <label>
+                    <input type="checkbox" value=" Queso">
+                    Queso
+                </label>
+            </div>
+
+
+            <div>
+                <h3>Escoge tu salsa</h3>
+
+                <label>
+                    <input type="radio" name="salsa" value="Chocolate">
+                    Chocolate
+                </label>
+
+                <label>
+                    <input type="radio" name="salsa" value="Arequipe">
+                    Arequipe
+                </label>
+
+                <label>
+                    <input type="radio" name="salsa" value="Fresa">
+                    Fresa
+                </label>
+
+                <label>
+                    <input type="radio" name="salsa" value="mora">
+                    mora
+                </label>
+            </div>
+
+        </div>
+
+        <button class="confirmar" onclick="personalizar()">
+            Confirmar pedido
+        </button>
+
+    </section>
+
+
+    <!-- NOSOTROS -->
+    <section class="nosotros" id="nosotros">
+
+        <h2>Sobre nosotros 🍓</h2>
+
+        <p>
+            Somos un emprendimiento dedicado a preparar
+            deliciosas fresas con crema, utilizando ingredientes
+            frescos y los mejores toppings para crear tu antojo perfecto.
+        </p>
+
+    </section>
+
+
+    <!-- CONTACTO -->
+    <footer id="contacto">
+
+        <h2>¡Haz tu pedido!</h2>
+
+        <p>📱 WhatsApp: 323 8263347</p>
+        <p>📍 Medellín, Colombia</p>
+       
+
+    </footer>
+
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
