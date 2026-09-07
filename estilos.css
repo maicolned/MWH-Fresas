@@ -13,6 +13,16 @@ body {
     background-color: white;
     color: #74245b;
 }
+.logo {
+    position: absolute;
+    left: 30px;
+    top: 10px;
+}
+.logo img{
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+}
 
 
 /* MENÚ */
@@ -26,6 +36,7 @@ header {
     justify-content: space-between;
 
     padding: 0 7%;
+    position: relative;
 }
 
 .logo {
