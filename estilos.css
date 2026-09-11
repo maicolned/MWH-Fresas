@@ -309,97 +309,77 @@ footer p {
     }
 
 }
-/* ✨ ANIMACIONES SUAVES */
 
-/* Las secciones aparecen suavemente */
-.hero-text,
-.productos,
-.personaliza,
-.nosotros,
-footer {
-    animation: aparecer 1s ease;
+/* 🍓 DECORACIÓN EXTRA */
+
+body {
+    overflow-x: hidden;
 }
 
-@keyframes aparecer {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Brillito suave en las tarjetas */
+.producto {
+    box-shadow: 0 5px 15px rgba(116, 36, 91, 0.10);
 }
 
+/* Efecto al pasar el mouse por las tarjetas */
+.producto:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(216, 60, 138, 0.25);
+}
 
-/* 🍓 Efecto bonito en las fotos */
+/* Las imágenes se acercan suavemente */
 .producto img {
     transition: transform 0.4s ease;
 }
 
 .producto:hover img {
-    transform: scale(1.06);
+    transform: scale(1.05);
 }
 
-
-/* 💗 Tarjetas de productos */
-.producto {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* ✨ Títulos con un pequeño movimiento */
+.productos h3,
+.personaliza h2,
+.nosotros h2 {
+    transition: transform 0.3s ease;
 }
 
-.producto:hover {
-    transform: translateY(-8px);
+.productos h3:hover,
+.personaliza h2:hover,
+.nosotros h2:hover {
+    transform: translateY(-3px);
+}
+
+/* 💗 Cajas de personalización más bonitas */
+.personalizar-container div {
+    box-shadow: 0 5px 15px rgba(116, 36, 91, 0.10);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.personalizar-container div:hover {
+    transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(216, 60, 138, 0.20);
 }
 
-
-/* ✨ Títulos */
-.hero-text h1 {
-    animation: titulo 1.2s ease;
-}
-
-@keyframes titulo {
-    from {
-        opacity: 0;
-        transform: translateX(-30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-
-/* 🌸 Efecto en los links del menú */
+/* 🌸 Menú */
 nav a {
-    position: relative;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
-nav a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -6px;
-    width: 0;
-    height: 2px;
-    background-color: #e54895;
-    transition: width 0.3s ease;
-}
-
-nav a:hover::after {
-    width: 100%;
-}
-
-
-/* 💕 Selección bonita de toppings y salsas */
-label {
-    transition: 0.3s ease;
-}
-
-label:hover {
+nav a:hover {
     color: #e54895;
-    transform: scale(1.03);
+    transform: translateY(-2px);
+}
+
+/* Botón */
+button {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 15px rgba(216, 60, 138, 0.25);
+}
+/* PRUEBA */
+body {
+    background-color: #ffb6d9 !important;
 }

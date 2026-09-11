@@ -78,29 +78,7 @@ function personalizar() {
         mensaje += "Sin toppings";
 
     }
-    // ✨ Animación al seleccionar toppings y salsas
 
-const opciones = document.querySelectorAll('label');
-
-opciones.forEach(opcion => {
-
-    const input = opcion.querySelector('input');
-
-    input.addEventListener('change', function () {
-
-        if (this.checked) {
-            opcion.style.color = "#d83c8a";
-            opcion.style.fontWeight = "bold";
-            opcion.style.transform = "scale(1.05)";
-        } else {
-            opcion.style.color = "";
-            opcion.style.fontWeight = "";
-            opcion.style.transform = "";
-        }
-
-    });
-
-});
 
 
     alert(mensaje + "\n\n¡Pedido confirmado! 💕");
