@@ -1,3 +1,5 @@
+
+
 * {
     margin: 0;
     padding: 0;
@@ -9,7 +11,7 @@ html {
 }
 
 body {
-    font-family: Georgia, serif;
+    font-family: 'Dancing Script', cursive;
     background-color: white;
     color: #74245b;
 }
@@ -104,6 +106,9 @@ button:hover {
 
 .hero-text {
     position: absolute;
+    
+  
+
 
     top: 50%;
     left: 12%;
@@ -309,3 +314,4 @@ footer p {
     }
 
 }
+

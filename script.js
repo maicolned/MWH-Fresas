@@ -25,40 +25,69 @@ function seleccionarProducto(producto) {
 
 function personalizar() {
 
-    let toppings = [];
+    const seleccionados = document.querySelectorAll(
+        'input[name="topping"]:checked'
+    );
 
-    document.querySelectorAll('input[type="checkbox"]:checked')
-    .forEach(function(topping) {
-        toppings.push(topping.value);
-    });
+    const salsa = document.querySelector(
+        'input[name="salsa"]:checked'
+    );
 
-    let salsa = document.querySelector('input[name="salsa"]:checked');
-
-    if (toppings.length === 0) {
-        alert("Selecciona al menos un topping");
+    if (seleccionados.length !== 2) {
+        alert("Debes elegir 2 toppings 🍓");
         return;
     }
 
     if (!salsa) {
-        alert("Selecciona una salsa");
+        alert("Debes elegir una salsa 🥄");
         return;
     }
 
-    let mensaje =
-        "🍓 NUEVO PEDIDO - MWH FRESAS\n\n" +
-        "Toppings: " + toppings.join(", ") + "\n" +
-        "Salsa: " + salsa.value + "\n\n" +
-        "Hola, quiero realizar este pedido.";
+    let toppings = [];
 
-    let numero = "573238263347";
+    seleccionados.forEach(topping => {
+        toppings.push(topping.value);
+    });
 
-    let enlace =
-        "https://web.whatsapp.com/send?phone=" +
-        numero +
-        "&text=" +
-        encodeURIComponent(mensaje);
+    // Datos del pedido
+    const datos = new FormData();
 
-    window.open(enlace, "_blank");
+    datos.append("producto", "Fresas con crema");
+    datos.append("toppings", toppings.join(", "));
+    datos.append("salsa", salsa.value);
+    datos.append("precio", "0");
+
+    // Guardar pedido en la base de datos
+    fetch("guardar_pedido.php", {
+        method: "POST",
+        body: datos
+    })
+    .then(respuesta => respuesta.text())
+    .then(resultado => {
+
+        console.log(resultado);
+
+        // Abrir WhatsApp
+        let mensaje =
+            "🍓 Hola, quiero hacer un pedido.%0A%0A" +
+            "🍓 Toppings: " + toppings.join(", ") + "%0A" +
+            "🥄 Salsa: " + salsa.value;
+
+        let numero = "573238263347";
+
+        window.open(
+            "https://web.whatsapp.com/send?phone=" +
+            numero +
+            "&text=" +
+            mensaje,
+            "_blank"
+        );
+
+    })
+    .catch(error => {
+        console.error(error);
+        alert("No se pudo guardar el pedido 😢");
+    });
 }
 
     let mensaje = "🍓 TU PEDIDO 🍓\n\n";
@@ -78,6 +107,22 @@ function personalizar() {
         mensaje += "Sin toppings";
 
     }
+   const toppings = document.querySelectorAll('input[name="topping"]');
+
+toppings.forEach(topping => {
+    topping.addEventListener('change', () => {
+
+        const seleccionados = document.querySelectorAll(
+            'input[name="topping"]:checked'
+        );
+
+        if (seleccionados.length > 2) {
+            topping.checked = false;
+            alert("Solo puedes elegir 2 toppings 🍓");
+        }
+    });
+});
+
 
     
 
