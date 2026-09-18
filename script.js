@@ -69,9 +69,9 @@ function personalizar() {
 
         // Abrir WhatsApp
         let mensaje =
-            "🍓 Hola, quiero hacer un pedido.%0A%0A" +
-            "🍓 Toppings: " + toppings.join(", ") + "%0A" +
-            "🥄 Salsa: " + salsa.value;
+            " Hola, quiero hacer un pedido.%0A%0A" +
+            " Toppings: " + toppings.join(", ") + "%0A" +
+            " Salsa: " + salsa.value;
 
         let numero = "573238263347";
 
@@ -90,43 +90,4 @@ function personalizar() {
     });
 }
 
-    let mensaje = "🍓 TU PEDIDO 🍓\n\n";
-
-    mensaje += "Salsa: " + salsa.value + "\n";
-
-
-
-    if (toppings.length > 0) {
-
-        mensaje +=
-            "Toppings: " +
-            toppings.join(", ");
-
-    } else {
-
-        mensaje += "Sin toppings";
-
-    }
-   const toppings = document.querySelectorAll('input[name="topping"]');
-
-toppings.forEach(topping => {
-    topping.addEventListener('change', () => {
-
-        const seleccionados = document.querySelectorAll(
-            'input[name="topping"]:checked'
-        );
-
-        if (seleccionados.length > 2) {
-            topping.checked = false;
-            alert("Solo puedes elegir 2 toppings 🍓");
-        }
-    });
-});
-
-
     
-
-
-
-    alert(mensaje + "\n\n¡Pedido confirmado! 💕");
-

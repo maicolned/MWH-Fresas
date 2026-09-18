@@ -315,3 +315,57 @@ footer p {
 
 }
 
+/* ¿POR QUÉ ELEGIR MWH FRESAS? */
+
+.porque-mwh {
+    width: 100%;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.beneficio-mwh h2 {
+    text-align: center;
+    margin: 0 0 35px 0;
+    font-size: 32px;
+}
+
+.beneficios-mwh {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}
+
+.beneficio-mwh {
+    width: 250px;
+    padding: 25px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+    text-align: center;
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+}
+
+.beneficio-mwh:hover {
+    transform: translateY(-5px);
+}
+
+.beneficio-mwh span {
+    display: block;
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+
+.beneficio-mwh h3 {
+    margin: 10px 0;
+    font-size: 22px;
+}
+
+.beneficio-mwh p {
+    margin: 0;
+    line-height: 1.5;
+}
