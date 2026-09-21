@@ -33,10 +33,10 @@ function personalizar() {
         'input[name="salsa"]:checked'
     );
 
-    if (seleccionados.length !== 2) {
-        alert("Debes elegir 2 toppings 🍓");
-        return;
-    }
+    if (seleccionados.length < 1 || seleccionados.length > 2) {
+    alert("Debes elegir 1 o 2 toppings 🍓");
+    return;
+}
 
     if (!salsa) {
         alert("Debes elegir una salsa 🥄");
