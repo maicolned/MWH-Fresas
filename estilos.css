@@ -315,6 +315,7 @@ footer p {
 
 }
 
+<<<<<<< HEAD
 /* ¿POR QUÉ ELEGIR MWH FRESAS? */
 
 .porque-mwh {
@@ -368,4 +369,78 @@ footer p {
 .beneficio-mwh p {
     margin: 0;
     line-height: 1.5;
+=======
+/* 🍓 DECORACIÓN EXTRA */
+
+body {
+    overflow-x: hidden;
+}
+
+/* Brillito suave en las tarjetas */
+.producto {
+    box-shadow: 0 5px 15px rgba(116, 36, 91, 0.10);
+}
+
+/* Efecto al pasar el mouse por las tarjetas */
+.producto:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(216, 60, 138, 0.25);
+}
+
+/* Las imágenes se acercan suavemente */
+.producto img {
+    transition: transform 0.4s ease;
+}
+
+.producto:hover img {
+    transform: scale(1.05);
+}
+
+/* ✨ Títulos con un pequeño movimiento */
+.productos h3,
+.personaliza h2,
+.nosotros h2 {
+    transition: transform 0.3s ease;
+}
+
+.productos h3:hover,
+.personaliza h2:hover,
+.nosotros h2:hover {
+    transform: translateY(-3px);
+}
+
+/* 💗 Cajas de personalización más bonitas */
+.personalizar-container div {
+    box-shadow: 0 5px 15px rgba(116, 36, 91, 0.10);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.personalizar-container div:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(216, 60, 138, 0.20);
+}
+
+/* 🌸 Menú */
+nav a {
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+nav a:hover {
+    color: #e54895;
+    transform: translateY(-2px);
+}
+
+/* Botón */
+button {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 15px rgba(216, 60, 138, 0.25);
+}
+/* PRUEBA */
+body {
+    background-color: #ffb6d9 !important;
+>>>>>>> b3d56ad8098e48c125edc0d9cbc50f1ba4165e3c
 }

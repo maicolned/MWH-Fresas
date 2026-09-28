@@ -90,4 +90,31 @@ function personalizar() {
     });
 }
 
+<<<<<<< HEAD
     
+=======
+    let mensaje = "🍓 TU PEDIDO 🍓\n\n";
+
+    mensaje += "Salsa: " + salsa.value + "\n";
+
+
+
+    if (toppings.length > 0) {
+
+        mensaje +=
+            "Toppings: " +
+            toppings.join(", ");
+
+    } else {
+
+        mensaje += "Sin toppings";
+
+    }
+
+
+
+    alert(mensaje + "\n\n¡Pedido confirmado! 💕");
+
+
+
+>>>>>>> b3d56ad8098e48c125edc0d9cbc50f1ba4165e3c
