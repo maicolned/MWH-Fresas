@@ -1,0 +1,4 @@
+# Esta carpeta no se abre desde el navegador.
+# includes/: son piezas que usan las páginas, no páginas.
+# base_datos/: el .sql tiene las huellas de las claves; nadie debe poder descargarlo.
+Require all denied

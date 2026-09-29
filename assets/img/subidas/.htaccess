@@ -1,0 +1,5 @@
+# Carpeta de fotos subidas desde el panel.
+# Aunque alguien lograra subir un archivo .php aquí, Apache no lo deja abrir.
+<FilesMatch "\.(php|phtml|phar)$">
+    Require all denied
+</FilesMatch>

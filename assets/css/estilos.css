@@ -1,0 +1,979 @@
+/* =====================================================================
+   estilos.css — MWH Fresas
+   Es su hoja de estilos, con estos arreglos:
+   - Se resolvió el conflicto de Git que tenía al final.
+   - Se quitó el bloque "PRUEBA" que pintaba todo el fondo de rosado.
+   - Dancing Script queda para los títulos; el texto normal va en Poppins,
+     que se lee mejor (sobre todo precios y formularios).
+   - Se agregaron las secciones nuevas: vaso, pedido y panel.
+   ===================================================================== */
+
+:root {
+    --vino: #74245b;
+    --vino-oscuro: #64204f;
+    --rosado: #e54895;
+    --rosado-oscuro: #c92d78;
+    --rosado-titulo: #d83c8a;
+    --rosado-claro: #ffe3f0;
+    --rosado-fondo: #f9d8e9;
+    --pie: #722451;
+    --verde: #1f9d55;
+    --rojo: #c62828;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Poppins', Arial, sans-serif;
+    background-color: white;
+    color: var(--vino);
+    overflow-x: hidden;
+}
+
+h1, h2, h3 {
+    font-family: 'Dancing Script', cursive;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* MENÚ */
+
+header {
+    min-height: 80px;
+    background-color: pink;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 7%;
+}
+
+.logo img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    display: block;
+}
+
+nav {
+    display: flex;
+    gap: 35px;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--vino-oscuro);
+    font-weight: bold;
+    transition: color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+}
+
+nav a:hover,
+nav a.activo {
+    color: var(--rosado);
+    transform: translateY(-2px);
+}
+
+nav a.activo {
+    border-bottom: 2px solid var(--rosado);
+}
+
+/* BOTONES (button y los enlaces con clase "boton" se ven igual) */
+
+button,
+.boton {
+    display: inline-block;
+    border: none;
+    background-color: var(--rosado);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: inherit;
+    font-size: 15px;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s;
+}
+
+button:hover,
+.boton:hover {
+    background-color: var(--rosado-oscuro);
+    transform: translateY(-3px);
+    box-shadow: 0 7px 15px rgba(216, 60, 138, 0.25);
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+    transform: none;
+}
+
+.boton-whatsapp {
+    background-color: #25a244;
+}
+
+.boton-whatsapp:hover {
+    background-color: #1b8a37;
+}
+
+/* PORTADA */
+
+.hero {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+}
+
+.hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(65%);
+}
+
+.hero-text {
+    position: absolute;
+    top: 50%;
+    left: 12%;
+    transform: translateY(-50%);
+    color: white;
+}
+
+.hero-text h1 {
+    font-size: 65px;
+    margin-bottom: 15px;
+    line-height: 1.1;
+}
+
+.hero-text p {
+    font-family: 'Dancing Script', cursive;
+    font-size: 28px;
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+
+/* PRODUCTOS */
+
+.productos {
+    text-align: center;
+    padding: 70px 8%;
+}
+
+.productos h2 {
+    font-size: 30px;
+    margin-bottom: -5px;
+}
+
+.productos h3 {
+    font-size: 48px;
+    color: var(--rosado-titulo);
+    margin-bottom: 40px;
+}
+
+.productos-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 280px));
+    justify-content: center;
+    gap: 25px;
+}
+
+.producto {
+    background-color: var(--rosado-claro);
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(116, 36, 91, 0.10);
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+}
+
+.producto:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(216, 60, 138, 0.25);
+}
+
+.producto img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.4s ease;
+}
+
+.producto:hover img {
+    transform: scale(1.05);
+}
+
+.producto h4 {
+    font-size: 18px;
+    margin: 15px 0 5px;
+}
+
+.producto p {
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.producto .descripcion {
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.etiqueta-agotado {
+    display: inline-block;
+    background: #eee;
+    color: #666;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+/* GALERÍA */
+
+.galeria {
+    background-color: var(--rosado-fondo);
+    padding: 60px 8%;
+    text-align: center;
+}
+
+.galeria h2 {
+    font-size: 42px;
+    margin-bottom: 30px;
+}
+
+.galeria-fotos {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.galeria-fotos img {
+    width: 240px;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(116, 36, 91, 0.15);
+}
+
+/* TOPPINGS Y SALSAS (página de productos) */
+
+.ingredientes {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    padding: 0 8% 70px;
+}
+
+.ingredientes > div {
+    background: white;
+    border-radius: 15px;
+    padding: 25px 35px;
+    min-width: 260px;
+    box-shadow: 0 5px 15px rgba(116, 36, 91, 0.10);
+}
+
+.ingredientes h3 {
+    font-size: 32px;
+    color: var(--rosado-titulo);
+    margin-bottom: 10px;
+}
+
+.ingredientes ul {
+    list-style: none;
+}
+
+.ingredientes li {
+    margin: 8px 0;
+}
+
+.punto {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+.agotado {
+    color: #999;
+    text-decoration: line-through;
+}
+
+.agotado small {
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* PERSONALIZAR */
+
+.personaliza {
+    background-color: var(--rosado-fondo);
+    padding: 70px 8%;
+    text-align: center;
+}
+
+.personaliza h2 {
+    font-size: 48px;
+    margin-bottom: 40px;
+}
+
+.armador {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.opciones {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    text-align: left;
+}
+
+.paso,
+.pedido,
+.vista-vaso {
+    background-color: white;
+    padding: 25px;
+    border-radius: 15px;
+    min-width: 280px;
+    box-shadow: 0 5px 15px rgba(116, 36, 91, 0.10);
+}
+
+.paso h3,
+.pedido h3 {
+    margin-bottom: 10px;
+    color: var(--rosado-titulo);
+    font-size: 28px;
+}
+
+.paso h3 small {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 14px;
+    color: var(--vino);
+}
+
+label {
+    display: block;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+label.agotado {
+    cursor: not-allowed;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    accent-color: var(--rosado);
+    width: 17px;
+    height: 17px;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+
+/* EL VASO: es un dibujo SVG que hace assets/js/vaso.js.
+   Aquí solo va su tamaño y las animaciones. */
+
+.vista-vaso {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: flex-start;
+}
+
+.vaso-svg {
+    width: 250px;
+    max-width: 100%;
+}
+
+.vaso-svg svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* El topping que se acaba de marcar cae desde arriba y rebota un poquito */
+.pieza-nueva {
+    animation: caer-pieza 0.5s ease-out;
+}
+
+@keyframes caer-pieza {
+    0%   { transform: translateY(-70px); opacity: 0; }
+    70%  { transform: translateY(4px);   opacity: 1; }
+    100% { transform: translateY(0); }
+}
+
+/* La salsa nueva aparece suavemente */
+.salsa-nueva {
+    animation: aparecer 0.6s ease-out;
+}
+
+@keyframes aparecer {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.precio-vaso {
+    font-size: 26px;
+    font-weight: bold;
+    margin: 15px 0 5px;
+}
+
+.resumen-vaso {
+    font-size: 14px;
+    min-height: 40px;
+    margin-bottom: 15px;
+}
+
+.mensaje-error {
+    color: var(--rojo);
+    font-weight: bold;
+    margin-top: 10px;
+    min-height: 1em;
+}
+
+/* EL PEDIDO */
+
+.pedido {
+    max-width: 640px;
+    margin: 40px auto 0;
+    text-align: left;
+}
+
+#lista-vasos {
+    list-style: none;
+    margin-bottom: 10px;
+}
+
+#lista-vasos li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px dashed #ecc5d8;
+}
+
+#lista-vasos li.vacio {
+    color: #999;
+}
+
+.quitar {
+    background: white;
+    color: var(--rojo);
+    border: 1px solid var(--rojo);
+    padding: 5px 12px;
+    font-size: 13px;
+}
+
+.quitar:hover {
+    background: var(--rojo);
+    color: white;
+}
+
+.total {
+    text-align: right;
+    font-size: 20px;
+    margin: 10px 0 20px;
+}
+
+.campo {
+    margin-bottom: 14px;
+}
+
+.campo label,
+.etiqueta {
+    display: block;
+    margin: 0 0 5px;
+    font-weight: bold;
+}
+
+.campo label.en-linea {
+    display: inline-block;
+    font-weight: normal;
+    margin-right: 20px;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e3b8cd;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 15px;
+    color: #333;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid var(--rosado);
+    border-color: transparent;
+}
+
+.confirmar {
+    width: 100%;
+    margin-top: 10px;
+    font-size: 17px;
+}
+
+.pedido-listo {
+    text-align: center;
+}
+
+.pedido-listo p {
+    margin: 10px 0;
+}
+
+/* NOSOTROS */
+
+.nosotros {
+    text-align: center;
+    padding: 70px 20%;
+}
+
+.nosotros h2 {
+    font-size: 45px;
+    margin-bottom: 20px;
+}
+
+.nosotros p {
+    font-size: 18px;
+    line-height: 1.7;
+}
+
+/* ¿POR QUÉ ELEGIR MWH FRESAS? */
+
+.porque-mwh {
+    width: 100%;
+    padding: 20px 20px 70px;
+    text-align: center;
+}
+
+.porque-mwh h2 {
+    margin: 0 0 35px 0;
+    font-size: 40px;
+}
+
+.beneficios-mwh {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.beneficio-mwh {
+    width: 250px;
+    padding: 25px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+    transition: transform 0.3s ease;
+}
+
+.beneficio-mwh:hover {
+    transform: translateY(-5px);
+}
+
+.beneficio-mwh span {
+    display: block;
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+
+.beneficio-mwh h3 {
+    margin: 10px 0;
+    font-size: 28px;
+}
+
+.beneficio-mwh p {
+    line-height: 1.5;
+}
+
+/* AVISOS (mensajes de "guardado" o de error) */
+
+.aviso {
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.aviso-ok {
+    background: #e6f6ec;
+    color: #17693a;
+}
+
+.aviso-error {
+    background: #fdeaea;
+    color: var(--rojo);
+}
+
+/* FOOTER */
+
+footer {
+    background-color: var(--pie);
+    color: white;
+    text-align: center;
+    padding: 45px 20px;
+}
+
+footer h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+footer p {
+    margin: 8px;
+}
+
+footer a {
+    color: white;
+}
+
+footer .creditos {
+    margin-top: 25px;
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+/* =====================================================================
+   PANEL ADMINISTRATIVO (carpeta admin/)
+   ===================================================================== */
+
+.panel-cuerpo {
+    background: #faf5f8;
+    font-size: 15px;
+}
+
+.panel-encabezado {
+    padding: 10px 4%;
+}
+
+.panel-encabezado .usuario {
+    font-size: 14px;
+    text-align: right;
+}
+
+.panel-menu {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 10px 4%;
+    background: white;
+    border-bottom: 1px solid #f0d6e3;
+}
+
+.panel-menu a {
+    text-decoration: none;
+    color: var(--vino-oscuro);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.panel-menu a:hover,
+.panel-menu a.activo {
+    background: var(--rosado-claro);
+    color: var(--rosado-oscuro);
+}
+
+.panel {
+    padding: 30px 4% 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.panel h1 {
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+.panel h2 {
+    font-size: 30px;
+    margin: 30px 0 12px;
+}
+
+.contadores {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 15px;
+}
+
+.contador {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(116, 36, 91, 0.08);
+    border-left: 5px solid var(--rosado);
+}
+
+.contador strong {
+    display: block;
+    font-size: 30px;
+}
+
+.contador span {
+    font-size: 14px;
+}
+
+.caja {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(116, 36, 91, 0.08);
+    margin-bottom: 20px;
+}
+
+.tabla-scroll {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #f0d6e3;
+    vertical-align: middle;
+}
+
+th {
+    background: var(--rosado-claro);
+    font-size: 14px;
+}
+
+td.numero,
+th.numero {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.estado {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.estado-pendiente  { background: #fff4d6; color: #8a5a00; }
+.estado-preparando { background: #e3effd; color: #0d4a8f; }
+.estado-entregado  { background: #e6f6ec; color: #17693a; }
+.estado-cancelado  { background: #eee;    color: #666; }
+
+.filtros {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.filtros input,
+.filtros select {
+    width: auto;
+    flex: 1 1 180px;
+}
+
+.formulario {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px 20px;
+}
+
+.formulario .completo {
+    grid-column: 1 / -1;
+}
+
+.formulario label {
+    margin: 0 0 5px;
+    font-weight: 600;
+}
+
+.formulario input[type="color"] {
+    width: 60px;
+    height: 40px;
+    border: none;
+    background: none;
+}
+
+.botones-fila {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.botones-fila form {
+    display: inline;
+}
+
+.boton-chico {
+    padding: 6px 12px;
+    font-size: 13px;
+}
+
+.boton-gris {
+    background: #8a7a84;
+}
+
+.boton-gris:hover {
+    background: #6f616a;
+}
+
+.miniatura {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.barra {
+    height: 14px;
+    background: var(--rosado);
+    border-radius: 7px;
+    min-width: 4px;
+}
+
+.login {
+    max-width: 380px;
+    margin: 60px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(116, 36, 91, 0.15);
+    text-align: center;
+}
+
+.login img {
+    width: 110px;
+}
+
+.login h1 {
+    font-size: 40px;
+    margin: 10px 0 20px;
+}
+
+.login .campo {
+    text-align: left;
+}
+
+.login button {
+    width: 100%;
+}
+
+/* CELULAR */
+
+@media (max-width: 800px) {
+
+    header {
+        flex-direction: column;
+        gap: 12px;
+        padding: 15px;
+    }
+
+    nav {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .hero {
+        height: 420px;
+    }
+
+    .hero-text h1 {
+        font-size: 45px;
+    }
+
+    .nosotros {
+        padding: 50px 8%;
+    }
+
+    .armador {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .opciones,
+    .paso,
+    .vista-vaso {
+        width: 100%;
+        max-width: 420px;
+        min-width: 0;
+    }
+
+    .panel-encabezado .usuario {
+        text-align: center;
+    }
+}
+
+@media (max-width: 500px) {
+
+    .personaliza,
+    .productos {
+        padding: 50px 16px;
+    }
+
+    .galeria-fotos img {
+        width: 100%;
+        height: 360px;
+    }
+
+    #lista-vasos li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Enlaces del encabezado del panel en los colores del sitio */
+.panel-encabezado a,
+.panel a:not(.boton) {
+    color: var(--rosado-oscuro);
+}
+
+/* Vista previa de la foto en el formulario de productos */
+.vista-previa {
+    display: block;
+    width: 160px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin: 10px 0 4px;
+    border: 1px solid #f0d6e3;
+}
+
+.vista-previa[hidden] {
+    display: none;
+}
