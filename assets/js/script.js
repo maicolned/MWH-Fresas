@@ -218,6 +218,7 @@ function iniciarArmador() {
             direccion: document.getElementById("direccion").value.trim(),
             notas: document.getElementById("notas").value.trim(),
             vasos: vasos, // OJO: no se envía ningún precio
+            empresa: document.getElementById("empresa").value, // campo trampa: debe ir vacío
         };
 
         const problema = validarPedido(datos);

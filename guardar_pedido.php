@@ -12,6 +12,12 @@
 //       o no se guarda nada.
 //    4. Arma el mensaje de WhatsApp con los nombres de la base de datos.
 //
+//  Protección contra bots y contra quien pide y no paga:
+//    - El formulario tiene un campo invisible ("empresa"). Una persona no
+//      lo ve y lo deja vacío; un robot que llena todo, lo llena.
+//    - Un celular bloqueado desde el panel ya no puede pedir por aquí.
+//    - Nadie puede tener más de 2 pedidos sin entregar al mismo tiempo.
+//
 //  Responde en JSON: {"ok": true, "codigo": "MWH-00013", ...}
 //                 o  {"ok": false, "errores": ["..."]}
 // =====================================================================
@@ -47,6 +53,7 @@ $entrega   = (string) ($entrada["entrega"] ?? "");
 $direccion = trim((string) ($entrada["direccion"] ?? ""));
 $notas     = trim((string) ($entrada["notas"] ?? ""));
 $vasos     = $entrada["vasos"] ?? [];
+$trampa    = trim((string) ($entrada["empresa"] ?? "")); // el campo invisible
 
 if (!preg_match('/^[\p{L} ]{3,60}$/u', $cliente)) {
     $errores[] = "Escribe tu nombre (solo letras, mínimo 3).";
@@ -138,6 +145,33 @@ foreach (array_values($vasos) as $n => $vaso) {
     ];
 }
 
+// ---------------------------------------------------------------------
+// ¿Quién pide? Revisión del celular contra la tabla clientes.
+// Se hace solo si el celular es válido (si no, ya hay un error arriba).
+// ---------------------------------------------------------------------
+const MAX_SIN_ENTREGAR = 2;
+
+if ($trampa !== "") {
+    // Lo llenó un robot. No se le explica por qué (para no ayudarle).
+    responder(["ok" => false, "errores" => ["No se pudo recibir el pedido."]], 422);
+}
+
+if (!$errores) {
+    $cliente_guardado = consultar_uno(
+        "SELECT c.estado,
+                (SELECT COUNT(*) FROM pedidos p
+                  WHERE p.telefono = c.telefono AND p.estado IN ('pendiente','preparando')) AS sin_entregar
+           FROM clientes c WHERE c.telefono = ?",
+        "s", [$telefono]
+    );
+    if ($cliente_guardado && $cliente_guardado["estado"] === "bloqueado") {
+        $errores[] = "No pudimos recibir tu pedido por la página. Escríbenos por WhatsApp y lo revisamos.";
+    } elseif ($cliente_guardado && $cliente_guardado["sin_entregar"] >= MAX_SIN_ENTREGAR) {
+        $errores[] = "Ya tienes " . $cliente_guardado["sin_entregar"] . " pedidos sin entregar. "
+                   . "Escríbenos por WhatsApp para confirmarlos antes de hacer otro.";
+    }
+}
+
 // Si hay cualquier error, NO se guarda nada.
 if ($errores) {
     responder(["ok" => false, "errores" => $errores], 422);
@@ -151,6 +185,15 @@ if ($errores) {
 // ---------------------------------------------------------------------
 $conexion->begin_transaction();
 try {
+    // El cliente: si es la primera vez que pide, se crea su registro.
+    // Si ya existía, NO se le cambia el nombre (si no, cualquiera que sepa
+    // el celular de otra persona le cambiaría el nombre).
+    ejecutar(
+        "INSERT INTO clientes (telefono, nombre) VALUES (?, ?)
+         ON DUPLICATE KEY UPDATE telefono = telefono",
+        "ss", [$telefono, $cliente]
+    );
+
     $pedido_id = ejecutar(
         "INSERT INTO pedidos (cliente, telefono, entrega, direccion, notas, total)
          VALUES (?, ?, ?, ?, ?, ?)",

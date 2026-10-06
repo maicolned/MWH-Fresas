@@ -1,22 +1,40 @@
 <?php
 // =====================================================================
 //  admin/pedido.php — detalle de un pedido y cambio de estado.
-//  Muestra la "orden de preparación": qué lleva cada vaso.
+//  Muestra la "orden de preparación": qué lleva cada vaso, y quién es
+//  el cliente: si ya nos había comprado o si es la primera vez.
 // =====================================================================
-require "seguridad.php";
+require "clientes_funciones.php";
 exigir_sesion();
 
 $id = (int) ($_GET["id"] ?? 0);
 $estados = ["pendiente", "preparando", "entregado", "cancelado"];
 
-// Cambiar el estado (lo pueden hacer el admin y el vendedor).
+// Dos formularios llegan aquí (los pueden usar el admin y el vendedor):
+//   accion = estado  -> cambiar el estado del pedido
+//   accion = cliente -> verificar / bloquear al cliente y dejarle una nota
 if (es_post()) {
-    $nuevo = $_POST["estado"] ?? "";
-    if (in_array($nuevo, $estados, true)) {
-        ejecutar("UPDATE pedidos SET estado = ? WHERE id = ?", "si", [$nuevo, $id]);
-        avisar("El pedido " . codigo_pedido($id) . " quedó en estado: $nuevo.");
+    if (($_POST["accion"] ?? "") === "cliente") {
+        $error = guardar_cliente($_POST["telefono"] ?? "", $_POST["estado_cliente"] ?? "", $_POST["notas_cliente"] ?? "");
+        avisar($error ?: "Cliente actualizado.", $error ? "error" : "ok");
     } else {
-        avisar("Ese estado no existe.", "error");
+        $nuevo = $_POST["estado"] ?? "";
+        if (in_array($nuevo, $estados, true)) {
+            ejecutar("UPDATE pedidos SET estado = ? WHERE id = ?", "si", [$nuevo, $id]);
+            // Entregado = el cliente recibió y pagó: su número queda verificado.
+            // (Si estaba bloqueado no se toca: eso lo decide el negocio.)
+            if ($nuevo === "entregado") {
+                ejecutar(
+                    "UPDATE clientes c JOIN pedidos p ON p.telefono = c.telefono
+                        SET c.estado = 'verificado', c.actualizado = NOW()
+                      WHERE p.id = ? AND c.estado = 'nuevo'",
+                    "i", [$id]
+                );
+            }
+            avisar("El pedido " . codigo_pedido($id) . " quedó en estado: $nuevo.");
+        } else {
+            avisar("Ese estado no existe.", "error");
+        }
     }
     header("Location: pedido.php?id=$id");
     exit;
@@ -46,6 +64,15 @@ $vasos = consultar(
     "i", [$id]
 );
 
+// El historial del cliente y sus últimos pedidos.
+$cliente = historial_cliente($pedido["telefono"]);
+$otros = consultar(
+    "SELECT id, total, estado, fecha FROM pedidos
+      WHERE telefono = ? AND id <> ?
+      ORDER BY fecha DESC LIMIT 5",
+    "si", [$pedido["telefono"], $id]
+);
+
 $titulo = "Pedido " . codigo_pedido($id);
 $activa = "pedidos";
 require "encabezado.php";
@@ -68,6 +95,49 @@ require "encabezado.php";
     <p><strong>Estado:</strong> <span class="estado estado-<?= $pedido["estado"] ?>"><?= $pedido["estado"] ?></span></p>
 </div>
 
+<?php if ($cliente): [$clase, $texto, $explicacion] = etiqueta_cliente($cliente); ?>
+    <h2>¿Quién pide?</h2>
+    <div class="caja tarjeta-cliente tc-<?= $clase ?>">
+        <p class="tc-titulo"><?= mostrar_etiqueta($cliente) ?> <?= limpiar($explicacion) ?></p>
+        <p>
+            <strong><?= $cliente["total"] ?></strong> pedido(s) en total ·
+            <strong><?= $cliente["entregados"] ?></strong> entregado(s) ·
+            <strong><?= $cliente["cancelados"] ?></strong> cancelado(s) ·
+            primer pedido el <?= date("d/m/Y", strtotime($cliente["primer_pedido"])) ?>
+        </p>
+        <?php if (mb_strtolower(trim($pedido["cliente"])) !== mb_strtolower(trim($cliente["nombre"]))): ?>
+            <!-- El mismo celular pidió con otro nombre: puede ser un familiar,
+                 o alguien usando el número de otra persona. Vale la pena preguntar. -->
+            <p class="aviso aviso-error">⚠ En este pedido escribió el nombre «<?= limpiar($pedido["cliente"]) ?>»,
+               pero este celular está registrado como «<?= limpiar($cliente["nombre"]) ?>».</p>
+        <?php endif; ?>
+        <?php if ($cliente["notas"]): ?>
+            <p><strong>Nota:</strong> <?= limpiar($cliente["notas"]) ?></p>
+        <?php endif; ?>
+
+        <?php if ($otros): ?>
+            <p><strong>Sus otros pedidos:</strong>
+                <?php foreach ($otros as $o): ?>
+                    <a href="pedido.php?id=<?= $o["id"] ?>"><?= codigo_pedido($o["id"]) ?></a>
+                    <span class="estado estado-<?= $o["estado"] ?>"><?= $o["estado"] ?></span>
+                <?php endforeach; ?>
+            </p>
+        <?php endif; ?>
+
+        <form method="post" class="filtros form-cliente">
+            <input type="hidden" name="accion" value="cliente">
+            <input type="hidden" name="telefono" value="<?= limpiar($cliente["telefono"]) ?>">
+            <select name="estado_cliente" aria-label="Estado del cliente">
+                <option value="nuevo" <?= $cliente["estado"] === "nuevo" ? "selected" : "" ?>>Nuevo</option>
+                <option value="verificado" <?= $cliente["estado"] === "verificado" ? "selected" : "" ?>>Verificado</option>
+                <option value="bloqueado" <?= $cliente["estado"] === "bloqueado" ? "selected" : "" ?>>Bloqueado</option>
+            </select>
+            <input type="text" name="notas_cliente" value="<?= limpiar($cliente["notas"]) ?>" maxlength="200" placeholder="Nota sobre este cliente (opcional)">
+            <button type="submit">Guardar cliente</button>
+        </form>
+    </div>
+<?php endif; ?>
+
 <h2>Orden de preparación</h2>
 <div class="caja tabla-scroll">
     <table>
@@ -87,6 +157,7 @@ require "encabezado.php";
 
 <h2>Cambiar estado</h2>
 <form class="caja filtros" method="post">
+    <input type="hidden" name="accion" value="estado">
     <select name="estado">
         <?php foreach ($estados as $e): ?>
             <option value="<?= $e ?>" <?= $e === $pedido["estado"] ? "selected" : "" ?>><?= ucfirst($e) ?></option>

@@ -12,6 +12,7 @@ $opciones = [
     // clave        archivo              texto           solo admin
     "resumen"   => ["index.php",         "Resumen",       false],
     "pedidos"   => ["pedidos.php",       "Pedidos",       false],
+    "clientes"  => ["clientes.php",      "Clientes",      false],
     "productos" => ["productos.php",     "Productos",     true],
     "toppings"  => ["toppings.php",      "Toppings",      false],
     "salsas"    => ["salsas.php",        "Salsas",        false],

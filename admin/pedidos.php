@@ -2,7 +2,7 @@
 // =====================================================================
 //  admin/pedidos.php — listado de pedidos con buscador y filtro.
 // =====================================================================
-require "seguridad.php";
+require "clientes_funciones.php";
 exigir_sesion();
 
 $buscar = trim($_GET["buscar"] ?? "");
@@ -13,10 +13,15 @@ if (!in_array($estado, $estados, true)) {
 }
 
 // La consulta se arma por partes, pero los VALORES siempre van con "?".
+// SQL_HISTORIAL (clientes_funciones.php) le pega a cada pedido el historial
+// de su cliente, para mostrar si es primera vez, verificado o sospechoso.
 $sql = "SELECT p.id, p.cliente, p.telefono, p.entrega, p.total, p.estado, p.fecha,
-               COUNT(d.id) AS vasos
+               COUNT(d.id) AS vasos,
+               MAX(c.estado) AS estado_cliente, MAX(h.entregados) AS entregados,
+               MAX(h.cancelados) AS cancelados, MAX(h.total_pedidos) AS total_pedidos
           FROM pedidos p
           JOIN detalle_pedidos d ON d.pedido_id = p.id
+          " . SQL_HISTORIAL . "
          WHERE 1 = 1";
 $tipos = "";
 $valores = [];
@@ -66,12 +71,13 @@ require "encabezado.php";
 <div class="caja tabla-scroll">
     <p><?= count($pedidos) ?> pedido(s)</p>
     <table>
-        <tr><th>Pedido</th><th>Fecha</th><th>Cliente</th><th>Celular</th><th>Entrega</th><th class="numero">Vasos</th><th class="numero">Total</th><th>Estado</th><th></th></tr>
+        <tr><th>Pedido</th><th>Fecha</th><th>Cliente</th><th>Tipo</th><th>Celular</th><th>Entrega</th><th class="numero">Vasos</th><th class="numero">Total</th><th>Estado</th><th></th></tr>
         <?php foreach ($pedidos as $p): ?>
             <tr>
                 <td><?= codigo_pedido($p["id"]) ?></td>
                 <td><?= date("d/m/Y h:i a", strtotime($p["fecha"])) ?></td>
                 <td><?= limpiar($p["cliente"]) ?></td>
+                <td><?= mostrar_etiqueta($p) ?></td>
                 <td><?= limpiar($p["telefono"]) ?></td>
                 <td><?= $p["entrega"] === "domicilio" ? "Domicilio" : "Recoge" ?></td>
                 <td class="numero"><?= $p["vasos"] ?></td>
@@ -81,7 +87,7 @@ require "encabezado.php";
             </tr>
         <?php endforeach; ?>
         <?php if (!$pedidos): ?>
-            <tr><td colspan="9">No se encontraron pedidos.</td></tr>
+            <tr><td colspan="10">No se encontraron pedidos.</td></tr>
         <?php endif; ?>
     </table>
 </div>

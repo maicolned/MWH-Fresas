@@ -10,7 +10,7 @@ SET NAMES utf8mb4;   -- sin esto las tildes y las ñ se dañan al importar
 
 -- Se borran en orden inverso a como dependen unas de otras.
 SET FOREIGN_KEY_CHECKS = 0;
-DROP TABLE IF EXISTS detalle_toppings, detalle_pedidos, pedidos, productos, toppings, salsas, usuarios, configuracion;
+DROP TABLE IF EXISTS detalle_toppings, detalle_pedidos, pedidos, clientes, productos, toppings, salsas, usuarios, configuracion;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ---------------------------------------------------------------------
@@ -69,8 +69,24 @@ CREATE TABLE salsas (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- 5. PEDIDOS: el encabezado (quién pide, cómo lo recibe, cuánto pagó).
---    El cliente no necesita cuenta: nadie se registra para pedir un vaso.
+-- 5. CLIENTES: un registro por número de celular. El cliente NO crea
+--    cuenta: se guarda solo la primera vez que pide. Sirve para saber,
+--    al ver un pedido, si es alguien que ya compró (verificado), alguien
+--    nuevo (primera vez) o un número que pide y no paga (bloqueado).
+--    estado = verificado se pone solo cuando un pedido suyo se entrega.
+-- ---------------------------------------------------------------------
+CREATE TABLE clientes (
+  telefono      VARCHAR(15)  PRIMARY KEY,
+  nombre        VARCHAR(60)  NOT NULL,
+  estado        ENUM('nuevo','verificado','bloqueado') NOT NULL DEFAULT 'nuevo',
+  notas         VARCHAR(200) NULL,
+  primer_pedido DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  actualizado   DATETIME     NULL
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- 6. PEDIDOS: el encabezado (quién pide, cómo lo recibe, cuánto pagó).
+--    telefono es llave foránea hacia clientes: todo pedido tiene cliente.
 -- ---------------------------------------------------------------------
 CREATE TABLE pedidos (
   id        INT AUTO_INCREMENT PRIMARY KEY,
@@ -81,11 +97,12 @@ CREATE TABLE pedidos (
   notas     VARCHAR(200) NULL,
   total     INT UNSIGNED NOT NULL,
   estado    ENUM('pendiente','preparando','entregado','cancelado') NOT NULL DEFAULT 'pendiente',
-  fecha     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
+  fecha     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (telefono) REFERENCES clientes(telefono)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- 6. DETALLE_PEDIDOS: un renglón por cada vaso del pedido.
+-- 7. DETALLE_PEDIDOS: un renglón por cada vaso del pedido.
 --    El precio se COPIA aquí: si mañana sube, los pedidos viejos no cambian.
 -- ---------------------------------------------------------------------
 CREATE TABLE detalle_pedidos (
@@ -100,7 +117,7 @@ CREATE TABLE detalle_pedidos (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- 7. DETALLE_TOPPINGS: tabla intermedia. Un vaso lleva varios toppings y
+-- 8. DETALLE_TOPPINGS: tabla intermedia. Un vaso lleva varios toppings y
 --    un topping está en muchos vasos (relación muchos a muchos).
 -- ---------------------------------------------------------------------
 CREATE TABLE detalle_toppings (
@@ -112,7 +129,7 @@ CREATE TABLE detalle_toppings (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- 8. CONFIGURACION: datos del negocio que se editan desde el panel,
+-- 9. CONFIGURACION: datos del negocio que se editan desde el panel,
 --    sin tocar el código (nombre, WhatsApp, horario...).
 -- ---------------------------------------------------------------------
 CREATE TABLE configuracion (
@@ -154,10 +171,15 @@ INSERT INTO configuracion (clave, valor, descripcion) VALUES
 ('whatsapp',    '573238263347',                            'WhatsApp con 57 y sin espacios'),
 ('ciudad',      'Medellín, Colombia',                      'Ciudad que sale en el pie de página'),
 ('horario',     'Todos los días de 2:00 p. m. a 8:00 p. m.', 'Horario de atención'),
-('integrantes', 'Nombres de los integrantes del grupo',    'Quiénes hicieron la página (pie de página)');
+('integrantes', 'Nombres de los integrantes del grupo',    'Quiénes hicieron la página (pie de página)'),
+('direccion',   'Medellín, Antioquia, Colombia',           'Dirección del negocio (la que sale en el mapa)');
 
 -- Pedidos de ejemplo de los últimos 7 días, para que el panel y los
 -- reportes se vean con datos. Las fechas son relativas al día en que se importa.
+-- Mientras se cargan los ejemplos se apaga la revisión de llaves foráneas,
+-- porque los clientes se crean DESPUÉS, a partir de los pedidos.
+SET FOREIGN_KEY_CHECKS = 0;
+
 INSERT INTO pedidos (id, cliente, telefono, entrega, direccion, notas, total, estado, fecha) VALUES
 (1, 'Valentina Ríos', '3104567821', 'domicilio', 'Calle 38 # 12-61', NULL, 17000, 'entregado', CONCAT(CURDATE() - INTERVAL 6 DAY, ' 15:10:00')),
 (2, 'Samuel Ortiz', '3002148890', 'recoger', NULL, NULL, 47000, 'entregado', CONCAT(CURDATE() - INTERVAL 6 DAY, ' 17:40:00')),
@@ -170,7 +192,9 @@ INSERT INTO pedidos (id, cliente, telefono, entrega, direccion, notas, total, es
 (9, 'Isabella Henao', '3229014476', 'recoger', NULL, NULL, 34000, 'entregado', CONCAT(CURDATE() - INTERVAL 1 DAY, ' 15:30:00')),
 (10, 'Mateo Arango', '3136678854', 'recoger', NULL, NULL, 17000, 'entregado', CONCAT(CURDATE() - INTERVAL 1 DAY, ' 17:15:00')),
 (11, 'Camila Vélez', '3009981223', 'domicilio', 'Calle 66 # 51-29', NULL, 30000, 'preparando', NOW() - INTERVAL 40 MINUTE),
-(12, 'Andrés Muñoz', '3162204455', 'domicilio', 'Calle 78 # 30-52', NULL, 26000, 'pendiente', NOW() - INTERVAL 10 MINUTE);
+(12, 'Andrés Muñoz', '3162204455', 'domicilio', 'Calle 78 # 30-52', NULL, 26000, 'pendiente', NOW() - INTERVAL 10 MINUTE),
+(13, 'Juan Pablo Gil', '3156670043', 'domicilio', 'Calle 41 # 80-48', NULL, 13000, 'cancelado', CONCAT(CURDATE() - INTERVAL 2 DAY, ' 18:40:00')),
+(14, 'Pedro Pérez', '3000000001', 'domicilio', 'Calle 1 # 1-1', 'Nadie contestó en la dirección', 17000, 'cancelado', CONCAT(CURDATE() - INTERVAL 3 DAY, ' 20:10:00'));
 
 INSERT INTO detalle_pedidos (id, pedido_id, producto_id, salsa_id, precio) VALUES
 (1, 1, 2, 1, 17000),
@@ -191,7 +215,9 @@ INSERT INTO detalle_pedidos (id, pedido_id, producto_id, salsa_id, precio) VALUE
 (16, 11, 2, 1, 17000),
 (17, 11, 1, 3, 13000),
 (18, 12, 1, 3, 13000),
-(19, 12, 1, 4, 13000);
+(19, 12, 1, 4, 13000),
+(20, 13, 1, 2, 13000),
+(21, 14, 2, 1, 17000);
 
 INSERT INTO detalle_toppings (detalle_id, topping_id) VALUES
 (1, 4),
@@ -221,4 +247,21 @@ INSERT INTO detalle_toppings (detalle_id, topping_id) VALUES
 (16, 3),
 (17, 3),
 (18, 5),
-(19, 3);
+(19, 3),
+(20, 1),
+(21, 2),
+(21, 4);
+
+-- Clientes de ejemplo, sacados de los pedidos: un registro por celular.
+INSERT INTO clientes (telefono, nombre, primer_pedido)
+SELECT telefono, MIN(cliente), MIN(fecha) FROM pedidos GROUP BY telefono;
+
+-- Quien ya recibió (y pagó) un pedido queda verificado.
+UPDATE clientes SET estado = 'verificado'
+ WHERE telefono IN (SELECT telefono FROM pedidos WHERE estado = 'entregado');
+
+-- Un número que el negocio bloqueó: pidió, no contestó y no pagó.
+UPDATE clientes SET estado = 'bloqueado', notas = 'Pidió a domicilio y nunca contestó. No aceptar más pedidos.'
+ WHERE telefono = '3000000001';
+
+SET FOREIGN_KEY_CHECKS = 1;

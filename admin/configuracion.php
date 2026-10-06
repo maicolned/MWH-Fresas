@@ -7,7 +7,7 @@
 require "seguridad.php";
 exigir_admin();
 
-$filas = consultar("SELECT clave, valor, descripcion FROM configuracion ORDER BY FIELD(clave, 'nombre','lema','whatsapp','ciudad','horario','integrantes')");
+$filas = consultar("SELECT clave, valor, descripcion FROM configuracion ORDER BY FIELD(clave, 'nombre','lema','whatsapp','direccion','ciudad','horario','integrantes')");
 $errores = [];
 
 if (es_post()) {
@@ -57,7 +57,7 @@ require "encabezado.php";
 
 <form class="caja formulario" method="post">
     <?php foreach ($filas as $f): ?>
-        <div class="<?= in_array($f["clave"], ["lema", "integrantes"]) ? "completo" : "" ?>">
+        <div class="<?= in_array($f["clave"], ["lema", "direccion", "integrantes"]) ? "completo" : "" ?>">
             <label for="<?= limpiar($f["clave"]) ?>"><?= limpiar($f["descripcion"]) ?></label>
             <input type="text" id="<?= limpiar($f["clave"]) ?>" name="<?= limpiar($f["clave"]) ?>" value="<?= limpiar($f["valor"]) ?>" maxlength="255" required>
         </div>

@@ -76,6 +76,15 @@ En el celular: `http://192.168.1.20/MWH-Fresas/`
   de WhatsApp sale ya escrito con todo el detalle.
 - **Fotos de productos:** vista previa al escogerla, máximo 5 MB, y al reemplazar una foto
   subida se borra la anterior.
+- **Portada** con el banner (`hero.jpg`) y su botón "Pídelo ahora" clicable.
+- **Publicidad:** carrusel con 5 piezas que avanza solo y, al llegar a la última, vuelve a la
+  primera (`assets/js/promos.js`). Se pausa si el cliente pone el mouse encima o lo toca.
+- **Mapa de Google** con la ubicación. La dirección se cambia en panel → *Configuración*.
+- **Clientes por teléfono:** cada pedido muestra si quien pide es ★ primera vez, ✔ verificado
+  (ya recibió y pagó), ⚠ sospechoso (2+ cancelados y ninguno entregado) o 🚫 bloqueado.
+  Al entregar un pedido el número queda verificado solo. Un número bloqueado no puede pedir
+  por la página, nadie puede tener más de 2 pedidos sin entregar y el formulario tiene un
+  campo trampa invisible contra robots.
 - **Panel** con login y 2 roles: resumen con contadores, pedidos con buscador y filtro,
   orden de preparación, CRUD de productos con foto, toppings y salsas, 4 reportes,
   configuración del negocio y cambio de clave.
@@ -86,10 +95,11 @@ En el celular: `http://192.168.1.20/MWH-Fresas/`
 
 ```
 usuarios          personal del panel (clave con SHA-256 + sal)
+clientes          un registro por celular: nuevo / verificado / bloqueado + nota
 productos         los vasos: nombre, toppings que incluye, precio, foto
 toppings          nombre, color de su capa, disponible, activo
 salsas            nombre, color de su capa, disponible, activo
-pedidos           cliente, celular, entrega, dirección, total, estado, fecha
+pedidos           cliente, celular (FK → clientes), entrega, dirección, total, estado, fecha
 detalle_pedidos   un renglón por vaso → pedido, producto, salsa, precio copiado
 detalle_toppings  qué toppings lleva cada vaso (tabla intermedia)
 configuracion     nombre, lema, WhatsApp, ciudad, horario, integrantes
@@ -133,6 +143,7 @@ MWH-Fresas/
 │   ├── js/
 │   │   ├── vaso.js       ← ★ dibuja el vaso en SVG (formas de cada topping, salsa)
 │   │   ├── script.js     ← ★ lógica del armador (límites, validación, envío)
+│   │   ├── promos.js     ← carrusel de publicidad del inicio
 │   │   └── admin.js      ← validaciones del panel en el navegador
 │   └── img/
 │       ├── img1..5.png, logo.png    ← sus fotos
@@ -145,7 +156,8 @@ MWH-Fresas/
 │   └── pie.php           ← pie de página
 ├── base_datos/
 │   ├── fresas_db.sql     ← importar en phpMyAdmin (no se puede descargar desde el navegador)
-│   └── actualizacion_forma_toppings.sql  ← agrega la forma sin borrar los datos
+│   ├── actualizacion_forma_toppings.sql  ← agrega la forma sin borrar los datos
+│   └── actualizacion_clientes.sql        ← agrega clientes y dirección sin borrar los datos
 │
 └── admin/                ← el panel del negocio
     ├── seguridad.php     ← exigir_sesion(), exigir_admin(), huella de la clave
@@ -153,7 +165,9 @@ MWH-Fresas/
     ├── login.php, salir.php
     ├── index.php         ← resumen con contadores
     ├── pedidos.php       ← listado con buscador y filtro
-    ├── pedido.php        ← detalle y cambio de estado
+    ├── pedido.php        ← detalle, cambio de estado y "¿Quién pide?"
+    ├── clientes.php      ← celulares: verificar, bloquear, nota
+    ├── clientes_funciones.php  ← la regla de la etiqueta (primera vez, sospechoso...)
     ├── productos.php, producto_form.php   ← CRUD con foto
     ├── ingredientes.php  ← pantalla común de toppings.php y salsas.php
     └── reportes.php, configuracion.php, clave.php
@@ -173,7 +187,7 @@ poder explicarlos.**
 
 ---
 
-## 5. Las tres demostraciones para la sustentación
+## 5. Las demostraciones para la sustentación
 
 **1. El precio lo pone el servidor.** Hacer un pedido. En el navegador, F12 → Consola, y
 antes de confirmar escribir:
@@ -194,6 +208,11 @@ porque la tabla `toppings` tiene la columna `forma`, y `vaso.js` tiene una funci
 por cada forma.
 
 ---
+
+**4. Cliente sospechoso.** Panel → *Pedidos*: Juan Pablo Gil sale ⚠ Sospechoso (2 cancelados).
+Bloquear a un cliente desde su pedido, y luego intentar pedir con ese celular en la página:
+sale "No pudimos recibir tu pedido". Explicación: `guardar_pedido.php` revisa la tabla
+`clientes` antes de guardar.
 
 ## 6. Preguntas que les pueden hacer
 
@@ -218,7 +237,10 @@ por cada forma.
    sea una imagen. Además, el nombre del archivo lo inventa el servidor.
 9. **¿Qué diferencia hay entre admin y vendedor?** — El vendedor atiende pedidos y marca
    agotados. Productos, reportes y configuración son solo del admin (`exigir_admin()`).
-10. **¿Qué queda como trabajo futuro?** — Pagos en línea, domicilios con costo por zona,
+10. **¿Cómo saben si un pedido es de un bot?** — Tres barreras: un campo invisible que solo
+    llena un robot, máximo 2 pedidos sin entregar por celular, y números bloqueados. Además el
+    panel marca como sospechoso a quien tiene 2+ cancelados y ninguno entregado.
+11. **¿Qué queda como trabajo futuro?** — Pagos en línea, domicilios con costo por zona,
     que el cliente consulte su pedido por el número y publicar la página en internet.
 
 ---

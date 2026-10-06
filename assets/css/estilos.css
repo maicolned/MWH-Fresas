@@ -128,41 +128,58 @@ button:disabled {
     background-color: #1b8a37;
 }
 
-/* PORTADA */
+/* PORTADA: el banner hero.jpg completo, sin recortar ni oscurecer */
 
-.hero {
-    position: relative;
-    width: 100%;
-    height: 500px;
-    overflow: hidden;
+.hero-banner {
+    position: relative;      /* para ubicar encima el enlace del botón dibujado */
+    line-height: 0;          /* quita el espacio que deja una imagen debajo */
+    background: #fbe3ec;
 }
 
-.hero img {
+.hero-banner img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(65%);
+    height: auto;            /* mantiene la proporción: nunca corta el texto del banner */
+    display: block;
 }
 
-.hero-text {
+/* Enlace transparente justo encima del botón "Pídelo ahora" del banner.
+   Las medidas van en % para que siga encima del botón en cualquier tamaño. */
+.hero-boton-dibujado {
     position: absolute;
-    top: 50%;
-    left: 12%;
-    transform: translateY(-50%);
-    color: white;
+    left: 5.5%;
+    top: 79.5%;
+    width: 21.5%;
+    height: 13%;
+    border-radius: 999px;
 }
 
-.hero-text h1 {
-    font-size: 65px;
-    margin-bottom: 15px;
-    line-height: 1.1;
+.hero-boton-dibujado:hover,
+.hero-boton-dibujado:focus-visible {
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.8);
+    outline: none;
 }
 
-.hero-text p {
+/* Texto que solo leen los lectores de pantalla (y Google), no se ve */
+.solo-lectores {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+/* Mensaje de la portada para celular (en computador no se muestra) */
+.hero-movil {
+    display: none;
+    text-align: center;
+    padding: 22px 16px 6px;
+}
+
+.hero-movil p {
     font-family: 'Dancing Script', cursive;
-    font-size: 28px;
-    line-height: 1.5;
-    margin-bottom: 25px;
+    font-size: 26px;
+    margin-bottom: 14px;
 }
 
 /* PRODUCTOS */
@@ -240,30 +257,51 @@ button:disabled {
     font-size: 14px;
 }
 
-/* GALERÍA */
+/* UBICACIÓN (mapa de Google en el inicio) */
 
-.galeria {
+.ubicacion {
     background-color: var(--rosado-fondo);
     padding: 60px 8%;
     text-align: center;
 }
 
-.galeria h2 {
+.ubicacion h2 {
     font-size: 42px;
     margin-bottom: 30px;
 }
 
-.galeria-fotos {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
+.ubicacion-contenido {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 25px;
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: left;
 }
 
-.galeria-fotos img {
-    width: 240px;
-    height: 320px;
-    object-fit: cover;
+.ubicacion-datos {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(116, 36, 91, 0.10);
+}
+
+.ubicacion-datos h3 {
+    font-size: 32px;
+    color: var(--rosado-titulo);
+    margin-bottom: 12px;
+}
+
+.ubicacion-datos p {
+    margin-bottom: 14px;
+    line-height: 1.5;
+}
+
+.ubicacion-mapa {
+    width: 100%;
+    height: 100%;
+    min-height: 340px;
+    border: 0;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(116, 36, 91, 0.15);
 }
@@ -909,12 +947,16 @@ th.numero {
         justify-content: center;
     }
 
-    .hero {
-        height: 420px;
+    .hero-movil {
+        display: block;
     }
 
-    .hero-text h1 {
-        font-size: 45px;
+    .ubicacion-contenido {
+        grid-template-columns: 1fr;
+    }
+
+    .ubicacion-mapa {
+        min-height: 300px;
     }
 
     .nosotros {
@@ -946,10 +988,6 @@ th.numero {
         padding: 50px 16px;
     }
 
-    .galeria-fotos img {
-        width: 100%;
-        height: 360px;
-    }
 
     #lista-vasos li {
         flex-direction: column;
@@ -976,4 +1014,220 @@ th.numero {
 
 .vista-previa[hidden] {
     display: none;
+}
+
+/* =====================================================================
+   PUBLICIDAD (carrusel del inicio)
+   El carril es una fila que se desliza de lado. scroll-snap hace que al
+   soltar el dedo quede una pieza bien ubicada, no a la mitad.
+   ===================================================================== */
+
+.promos {
+    padding: 60px 0 70px;
+    text-align: center;
+    background: linear-gradient(180deg, #fff 0%, #fff4f8 100%);
+}
+
+.promos h2 {
+    font-size: 46px;
+}
+
+.promos-sub {
+    margin: 4px 0 28px;
+    color: var(--rosado-titulo);
+}
+
+.promos-marco {
+    position: relative;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 56px;
+}
+
+.promos-carril {
+    display: flex;
+    gap: 22px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: 6px 4px 18px;
+    scroll-padding: 0 4px;            /* que la primera pieza "pegue" en el borde, no 4 px adentro */
+    scrollbar-width: none;            /* sin barra de desplazamiento (Firefox) */
+}
+
+.promos-carril::-webkit-scrollbar {
+    display: none;                    /* sin barra de desplazamiento (Chrome/Safari) */
+}
+
+.promo {
+    flex: 0 0 calc((100% - 44px) / 3);   /* 3 piezas a la vista en computador */
+    scroll-snap-align: start;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 22px rgba(116, 36, 91, 0.16);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    line-height: 0;
+}
+
+.promo:hover,
+.promo:focus-visible {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 28px rgba(216, 60, 138, 0.28);
+    outline: none;
+}
+
+.promo img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.promos-flecha {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-60%);
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 30px;
+    line-height: 40px;
+    box-shadow: 0 4px 12px rgba(116, 36, 91, 0.25);
+}
+
+.promos-flecha:hover {
+    transform: translateY(-60%);
+}
+
+/* Puntos debajo del carrusel: el activo se alarga */
+.promos-puntos {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.promos-punto {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border-radius: 999px;
+    background: #f2bcd5;
+    box-shadow: none;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.promos-punto:hover {
+    transform: none;
+    box-shadow: none;
+    background: var(--rosado);
+}
+
+.promos-punto.activo {
+    width: 28px;
+    background: var(--rosado);
+}
+
+.promos-anterior { left: 4px; }
+.promos-siguiente { right: 4px; }
+
+@media (max-width: 900px) {
+    .promo {
+        flex-basis: calc((100% - 22px) / 2);   /* 2 a la vista en tableta */
+    }
+}
+
+@media (max-width: 600px) {
+    .promos h2 {
+        font-size: 38px;
+    }
+
+    .promos-marco {
+        padding: 0;
+    }
+
+    .promos-carril {
+        padding: 6px 16px 18px;
+        scroll-padding: 0 16px;
+    }
+
+    .promo {
+        flex-basis: 82%;          /* una pieza y se asoma la siguiente: invita a deslizar */
+    }
+
+    .promos-flecha {
+        display: none;            /* en el celular se desliza con el dedo */
+    }
+}
+
+/* =====================================================================
+   CLIENTES (panel): etiqueta de confianza de cada celular
+   ===================================================================== */
+
+.etiqueta-cliente {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: help;
+}
+
+.ec-verificado { background: #e6f6ec; color: #17693a; }
+.ec-primera    { background: #e3effd; color: #0d4a8f; }
+.ec-nuevo      { background: #f1edf0; color: #6b5a65; }
+.ec-sospechoso { background: #fff1d6; color: #8a4b00; }
+.ec-bloqueado  { background: #fdeaea; color: #b3261e; }
+
+/* Tarjeta "¿Quién pide?" en el detalle del pedido */
+.tarjeta-cliente {
+    border-left: 6px solid #d9c7d1;
+}
+
+.tarjeta-cliente p {
+    margin-bottom: 10px;
+}
+
+.tc-verificado { border-left-color: #1f9d55; }
+.tc-primera    { border-left-color: #2a72c7; }
+.tc-sospechoso { border-left-color: #e08a00; background: #fffaf0; }
+.tc-bloqueado  { border-left-color: #c62828; background: #fff6f6; }
+
+.tc-titulo {
+    font-weight: 600;
+}
+
+.tarjeta-cliente .estado {
+    margin-right: 8px;
+}
+
+/* Formulario de estado + nota en una sola línea */
+.form-cliente {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.form-cliente select,
+.form-cliente input[type="text"] {
+    width: auto;
+    flex: 1 1 140px;
+    padding: 6px 8px;
+    font-size: 14px;
+}
+
+.ayuda {
+    margin-bottom: 16px;
+    color: #6b5a65;
+}
+
+/* Campo trampa contra robots: existe en el formulario pero nadie lo ve */
+.campo-trampa {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
 }

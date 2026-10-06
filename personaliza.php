@@ -126,6 +126,14 @@ require "includes/encabezado.php";
                     <input type="text" id="notas" name="notas" maxlength="200" placeholder="Ej: sin mucha crema">
                 </div>
 
+                <!-- Campo trampa contra robots: una persona no lo ve (está fuera de
+                     la pantalla) y lo deja vacío. Si llega lleno, lo llenó un bot
+                     y guardar_pedido.php no recibe el pedido. -->
+                <div class="campo-trampa" aria-hidden="true">
+                    <label for="empresa">Empresa</label>
+                    <input type="text" id="empresa" name="empresa" tabindex="-1" autocomplete="off">
+                </div>
+
                 <p class="mensaje-error" id="error-pedido" role="alert"></p>
                 <button type="submit" class="confirmar" id="confirmar">Confirmar pedido</button>
             </form>
